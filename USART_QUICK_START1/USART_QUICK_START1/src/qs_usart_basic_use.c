@@ -1,3 +1,4 @@
+//#define CALIBRATE
 
 #include <asf.h>
 
@@ -39,19 +40,23 @@ int main(void)
 	configure_spi_master();
 	configure_AD7192();
 	
+	#ifndef CALIBRATE
 	configure_tc();
 	configure_tc_callbacks();
+	#endif //CALIBRATE
 
 	system_interrupt_enable_global();
 
 	//rintln("Testing start", sizeof("Testing start"));
 	state = ZEROSCALING;
+
+	int8_t uart_read_data[16];
 	drone_state = LANDED;
 	while (1) {
 		
 		loop();
-		usart_read_wait(&usart_instance, rx_buffer);
-		if (rx_buffer[0] =='r')
+		usart_read_wait(&usart_instance, uart_read_data);
+		if (uart_read_data[0] == 'r')
 		{
 			state = ZEROSCALING;
 		}
@@ -63,18 +68,28 @@ void loop() {
 	if(state == ZEROSCALING) {
 		zoffset = 0;
 		for(uint16_t i = 0; i < DATA_COLLECTED; i++) {
-			col_data[i] = get_data_from_landingsensor(0),
+			col_data[i] = get_data_from_landingsensor(1);
 			zoffset += col_data[i];
+		}
+		for(uint16_t i = 0; i < DATA_COLLECTED; i++) {
+			col_data[i] -= zoffset;
 		}
 		zoffset = zoffset/DATA_COLLECTED;
 		state = SENDINGDATA;
-		print("r", 1);
 	} else if (state == SENDINGDATA)
 	{
-		data = get_data_from_landingsensor(0) - zoffset;
+		data = get_data_from_landingsensor(1) - zoffset;
 		data = moving_average(data);
-		//printint(data);
-		//print("\n",	1);
+
+		#ifdef CALIBRATE
+		printint(data);
+		//printint(get_data_from_landingsensor(0));
+		//print("\t", 1);
+		//printint(get_data_from_landingsensor(1));
+		print("\n",	1);
+		#endif // CALIBRATE;
+	
+		#ifndef CALIBRATE
 		if(data > 1200000) { //airborn
 			//if(bumpers_is_pushed()) { //bumper activated
 			if(drone_state == AIRBORN) {
@@ -85,19 +100,23 @@ void loop() {
 				drone_state = AIRBORN;
 			}
 			//setBufData('l');
-		} else if (data != 0) //landed
+		} 
+		else if (data != 0) //landed
 		{
 			if(drone_state == LANDED) {
 				tc_set_data_to_send('l');
 				
-			} else {		  //just landed
+			} 
+			else {		  //just landed
 				print("l", 1);
 				drone_state = LANDED;
 			}
-		} else { //error
+		} 
+		else { //error
 			tc_set_data_to_send('e');
 			
 		}
+		#endif // CALIBRATE
 			
 	}
 }
