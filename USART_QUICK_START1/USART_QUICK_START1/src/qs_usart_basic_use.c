@@ -4,119 +4,80 @@
 
 #include "stdio.h"
 #include "UARTsetup.h"
-#include "SPI_setup.h"
-#include "AD7192.h"
 #include "bumpers.h"
 #include "timer.h"
+#include "bumpers.h"
+#include "button_landing.h"
 
-enum state{
-	ZEROSCALING,
-	SENDINGDATA
-} state;
+#define LED_1_PIN PORT_PA20 // D1 lyser ved landing
 
 enum drone_state{
 	AIRBORN,
 	LANDED
 } drone_state;
 
-int64_t data = 0;
-char recived_data = 0;
-int64_t zoffset = 0;
-
 void loop();
 
 int main(void)
-{
-		
+{	
 	system_init();
-
-	for (uint16_t i = 0; i < DATA_COLLECTED; i++)
-	{
-		col_data[i] = 0;
-	}
-
 	configure_usart();
-	//configure_usart_callbacks();
-	configure_spi_master();
-	configure_AD7192();
-	
+
 	#ifndef CALIBRATE
-	configure_tc();
+	configure_tc();	//modul som sender understell ca 10 ganger i sekundet
 	configure_tc_callbacks();
 	#endif //CALIBRATE
 
+	init_bumpers();
+	init_button_landing();
 	system_interrupt_enable_global();
 
-	//rintln("Testing start", sizeof("Testing start"));
-	state = ZEROSCALING;
+	PORT->Group[0].DIRSET.reg |= LED_1_PIN;
 
-	int8_t uart_read_data[16];
 	drone_state = LANDED;
 	while (1) {
-		
 		loop();
-		usart_read_wait(&usart_instance, uart_read_data);
-		if (uart_read_data[0] == 'r')
-		{
-			state = ZEROSCALING;
-		}
 	}
 	return 0;
 }
 
 void loop() {
-	if(state == ZEROSCALING) {
-		zoffset = 0;
-		for(uint16_t i = 0; i < DATA_COLLECTED; i++) {
-			col_data[i] = get_data_from_landingsensor(1);
-			zoffset += col_data[i];
-		}
-		for(uint16_t i = 0; i < DATA_COLLECTED; i++) {
-			col_data[i] -= zoffset;
-		}
-		zoffset = zoffset/DATA_COLLECTED;
-		state = SENDINGDATA;
-	} else if (state == SENDINGDATA)
-	{
-		data = get_data_from_landingsensor(1) - zoffset;
-		data = moving_average(data);
-
+	
 		#ifdef CALIBRATE
-		printint(data);
-		//printint(get_data_from_landingsensor(0));
-		//print("\t", 1);
-		//printint(get_data_from_landingsensor(1));
+		printint(number_of_triggered_landing_buttons());
+		print("\t", 1);
+		for(int i = 1; i <= 4; i++) {
+			printint(read_button_landing(i));
+			print("\t", 1);
+		}
+		printint(bumpers_is_pushed());
+		print("\t", 1);
+		printint(PORT->Group[0].IN.reg);
+		print("\t", 1);
 		print("\n",	1);
 		#endif // CALIBRATE;
 	
 		#ifndef CALIBRATE
-		if(data > 1200000) { //airborn
-			//if(bumpers_is_pushed()) { //bumper activated
-			if(drone_state == AIRBORN) {
-				tc_set_data_to_send('a');
-				
-			} else {		//just landed
-				print("a", 1); 
-				drone_state = AIRBORN;
-			}
-			//setBufData('l');
-		} 
-		else if (data != 0) //landed
-		{
+		if(number_of_triggered_landing_buttons() >= 2) { //Landed
+			
 			if(drone_state == LANDED) {
-				tc_set_data_to_send('l');
-				
-			} 
-			else {		  //just landed
-				print("l", 1);
+				if(bumpers_is_pushed()) {
+					tc_set_data_to_send('b');
+				} else {
+					tc_set_data_to_send('l');
+				}
+		} else {
 				drone_state = LANDED;
+				print("1", 1);
+				//PORT->Group[0].OUTSET.reg |= LED_1_PIN;
+				//av ukjent grunn fungerer ikke denne sammen med landingssensor3
 			}
 		} 
-		else { //error
-			tc_set_data_to_send('e');
-			
-		}
+		else //airborn
+		{	
+			drone_state = AIRBORN;
+			tc_set_data_to_send('a');
+			//PORT->Group[0].OUTCLR.reg |= LED_1_PIN;	
+		} 
 		#endif // CALIBRATE
-			
-	}
 }

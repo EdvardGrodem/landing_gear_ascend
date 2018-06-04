@@ -257,6 +257,17 @@
     </com_atmel_avrdbg_tool_atmelice>
     <avrtoolinterfaceclock>2000000</avrtoolinterfaceclock>
     <UseGdb>False</UseGdb>
+    <custom>
+      <ToolOptions xmlns="">
+        <InterfaceProperties>
+        </InterfaceProperties>
+        <InterfaceName>SWD</InterfaceName>
+      </ToolOptions>
+      <ToolType xmlns="">custom</ToolType>
+      <ToolNumber xmlns="">
+      </ToolNumber>
+      <ToolName xmlns="">Custom Programming Tool</ToolName>
+    </custom>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -604,12 +615,6 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\AD7192.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\AD7192.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\ASF\sam0\drivers\sercom\sercom_interrupt.c">
       <SubType>compile</SubType>
     </Compile>
@@ -640,10 +645,16 @@
     <Compile Include="src\ASF\sam0\drivers\tc\tc_sam_d_r\tc.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\SPI_setup.c">
+    <Compile Include="src\bumpers.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\SPI_setup.h">
+    <Compile Include="src\bumpers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\button_landing.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\button_landing.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\timer.c">

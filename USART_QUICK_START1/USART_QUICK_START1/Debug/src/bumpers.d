@@ -1,4 +1,4 @@
-src/SPI_setup.d src/SPI_setup.o: ../src/SPI_setup.c ../src/SPI_setup.h \
+src/bumpers.d src/bumpers.o: ../src/bumpers.c ../src/bumpers.h \
  ../src/asf.h ../src/ASF/sam0/utils/compiler.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\5.3.1\include\stddef.h \
  ../src/ASF/common/utils/parts.h ../src/ASF/sam0/utils/status_codes.h \
@@ -130,7 +130,7 @@ src/SPI_setup.d src/SPI_setup.o: ../src/SPI_setup.c ../src/SPI_setup.h \
  ../src/ASF/sam0/drivers/tc/tc_interrupt.h \
  ../src/ASF/sam0/drivers/tc/tc.h ../src/UARTsetup.h
 
-../src/SPI_setup.h:
+../src/bumpers.h:
 
 ../src/asf.h:
 

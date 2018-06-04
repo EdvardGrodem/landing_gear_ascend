@@ -130,7 +130,7 @@ src/qs_usart_basic_use.d src/qs_usart_basic_use.o: \
  ../src/ASF/sam0/drivers/tc/tc.h \
  ../src/ASF/sam0/drivers/tc/tc_interrupt.h \
  ../src/ASF/sam0/drivers/tc/tc.h ../src/UARTsetup.h ../src/asf.h \
- ../src/SPI_setup.h ../src/AD7192.h ../src/bumpers.h ../src/timer.h
+ ../src/bumpers.h ../src/timer.h ../src/button_landing.h
 
 ../src/asf.h:
 
@@ -404,10 +404,8 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 
 ../src/asf.h:
 
-../src/SPI_setup.h:
-
-../src/AD7192.h:
-
 ../src/bumpers.h:
 
 ../src/timer.h:
+
+../src/button_landing.h:

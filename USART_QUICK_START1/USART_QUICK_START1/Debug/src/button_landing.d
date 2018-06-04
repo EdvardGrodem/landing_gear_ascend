@@ -1,5 +1,5 @@
-src/AD7192.d src/AD7192.o: ../src/AD7192.c ../src/AD7192.h ../src/asf.h \
- ../src/ASF/sam0/utils/compiler.h \
+src/button_landing.d src/button_landing.o: ../src/button_landing.c \
+ ../src/button_landing.h ../src/asf.h ../src/ASF/sam0/utils/compiler.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\5.3.1\include\stddef.h \
  ../src/ASF/common/utils/parts.h ../src/ASF/sam0/utils/status_codes.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\5.3.1\include\stdint.h \
@@ -128,9 +128,9 @@ src/AD7192.d src/AD7192.o: ../src/AD7192.c ../src/AD7192.h ../src/asf.h \
  ../src/ASF/sam0/drivers/sercom/usart/usart.h \
  ../src/ASF/sam0/drivers/tc/tc.h \
  ../src/ASF/sam0/drivers/tc/tc_interrupt.h \
- ../src/ASF/sam0/drivers/tc/tc.h ../src/SPI_setup.h ../src/UARTsetup.h
+ ../src/ASF/sam0/drivers/tc/tc.h
 
-../src/AD7192.h:
+../src/button_landing.h:
 
 ../src/asf.h:
 
@@ -399,7 +399,3 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 ../src/ASF/sam0/drivers/tc/tc_interrupt.h:
 
 ../src/ASF/sam0/drivers/tc/tc.h:
-
-../src/SPI_setup.h:
-
-../src/UARTsetup.h:

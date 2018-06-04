@@ -2,8 +2,6 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-src\AD7192.c
-
 src\ASF\sam0\drivers\sercom\sercom_interrupt.c
 
 src\ASF\sam0\drivers\sercom\usart\usart_interrupt.c
@@ -12,7 +10,9 @@ src\ASF\sam0\drivers\tc\tc_interrupt.c
 
 src\ASF\sam0\drivers\tc\tc_sam_d_r\tc.c
 
-src\SPI_setup.c
+src\bumpers.c
+
+src\button_landing.c
 
 src\timer.c
 
